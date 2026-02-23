@@ -1,54 +1,32 @@
-/**
- * =================================================
- * MAIN CLASS - PalindromeCheckerApp
- * =====================================================
- *
- * Use Case 5: Stack Based Palindrome Checker
- *
- * Description:
- * This class validates a palindrome using a Stack
- * data structure which follows the LIFO principle.
- *
- * At this stage, the application:
- * - Pushes characters into a stack
- * - Pops them in reverse order
- * - Compares with original sequence
- * - Displays the result
- *
- * This maps stack behavior to reversal logic.
- *
- * @author Developer
- * @version 5.0
- */
-
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 public class PalindromeCheckerApp {
 
-    /**
-     * Application entry point for UC5.
-     *
-     * @param args Command-line arguments
-     */
     public static void main(String[] args) {
+        // Define the input string to validate
+        String input = "civic";
 
-        // Declare and initialize the input string
-        String input = "noon";
+        // Create a Queue to store characters in FIFO order
+        Queue<Character> queue = new LinkedList<>();
 
-        // Create a Stack to store characters
+        // Create a Stack to store characters in LIFO order
         Stack<Character> stack = new Stack<>();
 
-        // Push each character of the string into the stack
+        // Insert each character into both queue and stack
         for (char c : input.toCharArray()) {
+            queue.add(c);
             stack.push(c);
         }
 
-        // Assume palindrome initially
+        // Flag to track palindrome status
         boolean isPalindrome = true;
 
-        // Iterate again through original string and compare with popped values
-        for (char c : input.toCharArray()) {
-            if (c != stack.pop()) {
+        // Compare characters until the queue becomes empty
+        while (!queue.isEmpty()) {
+            // Dequeue (FIFO) and Pop (LIFO) and compare
+            if (!queue.remove().equals(stack.pop())) {
                 isPalindrome = false;
                 break;
             }
