@@ -1,14 +1,14 @@
-import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
+ * UseCase10
  * @author Developer
- * @version 9.0
+ * @version 10.0
  */
 public class PalindromeCheckerApp {
 
     /**
-     * Application entry point for UC9.
+     * Application entry point for UC10.
      * @param args Command-line arguments
      */
     public static void main(String[] args) {
@@ -17,33 +17,23 @@ public class PalindromeCheckerApp {
         System.out.print("Input : ");
         String input = sc.nextLine();
 
-        // Initial call to the recursive check method
-        boolean result = check(input, 0, input.length() - 1);
+        // Step 1: Normalize the string (Remove non-alphanumeric and lowercase)
+        // [^a-zA-Z0-9] matches anything that is NOT a letter or a number
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
-        System.out.println("Is Palindrome? : " + result);
+        boolean isPalindrome = true;
+
+        // Step 2: Compare characters from both ends using the provided hint
+        for (int i = 0; i < normalized.length() / 2; i++) {
+            // Compare symmetric characters
+            if (normalized.charAt(i) != normalized.charAt(normalized.length() - 1 - i)) {
+                isPalindrome = false;
+                break;
+            }
+        }
+
+        System.out.println("Is Palindrome? : " + isPalindrome);
 
         sc.close();
-    }
-
-    /**
-     * Recursively checks whether a string is palindrome.
-     * @param s Input string
-     * @param start Starting index
-     * @param end Ending index
-     * @return true if palindrome, otherwise false
-     */
-    private static boolean check(String s, int start, int end) {
-        // Base Condition: If start meets or exceeds end, all matched
-        if (start >= end) {
-            return true;
-        }
-
-        // Check if characters at current positions match
-        if (s.charAt(start) != s.charAt(end)) {
-            return false; // Mismatch found
-        }
-
-        // Recursive call: Move inward by incrementing start and decrementing end
-        return check(s, start + 1, end - 1);
     }
 }
