@@ -1,39 +1,59 @@
-import java.util.Scanner;
-
 /**
- * UseCase10
+
+ * Use Case 11: Object-Oriented Palindrome Service
  * @author Developer
- * @version 10.0
+ * @version 11.0
  */
+
 public class PalindromeCheckerApp {
 
     /**
-     * Application entry point for UC10.
+     * Application entry point for UC11.
+     *
      * @param args Command-line arguments
      */
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
 
-        System.out.print("Input : ");
-        String input = sc.nextLine();
+        String input = "racecar";
 
-        // Step 1: Normalize the string (Remove non-alphanumeric and lowercase)
-        // [^a-zA-Z0-9] matches anything that is NOT a letter or a number
-        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        PalindromeService service = new PalindromeService();
 
-        boolean isPalindrome = true;
+        boolean result = service.checkPalindrome(input);
 
-        // Step 2: Compare characters from both ends using the provided hint
-        for (int i = 0; i < normalized.length() / 2; i++) {
-            // Compare symmetric characters
-            if (normalized.charAt(i) != normalized.charAt(normalized.length() - 1 - i)) {
-                isPalindrome = false;
-                break;
-            }
+        System.out.println("Input : " + input);
+        System.out.println("Is Palindrome? : " + result);
+    }
+}
+
+/**
+ * Service class that contains palindrome logic.
+ */
+class PalindromeService {
+
+    /**
+     * Checks whether the input string is a palindrome.
+     *
+     * @param input input string
+     * @return true if palindrome, false otherwise
+     */
+    public boolean checkPalindrome(String input) {
+
+        if (input == null) {
+            return false;
         }
 
-        System.out.println("Is Palindrome? : " + isPalindrome);
+        int start = 0;
+        int end = input.length() - 1;
 
-        sc.close();
+        // Compare characters moving inward
+        while (start < end) {
+            if (input.charAt(start) != input.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+
+        return true;
     }
 }
