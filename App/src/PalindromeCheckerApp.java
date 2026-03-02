@@ -1,57 +1,89 @@
-/**
+import java.util.*;
 
- * Use Case 11: Object-Oriented Palindrome Service
- * @author Developer
- * @version 11.0
+/**
+ * UC12
+ * Author: Developer
+ * Version: 12.0
  */
 
-public class PalindromeCheckerApp {
+public class UseCase12PalindromeCheckerApp {
 
-    /**
-     * Application entry point for UC11.
-     *
-     * @param args Command-line arguments
-     */
     public static void main(String[] args) {
 
-        String input = "racecar";
+        Scanner scanner = new Scanner(System.in);
 
-        PalindromeService service = new PalindromeService();
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
 
-        boolean result = service.checkPalindrome(input);
+        System.out.println("Choose Strategy:");
+        System.out.println("1. Stack Strategy");
+        System.out.println("2. Deque Strategy");
+        System.out.print("Enter choice (1 or 2): ");
+
+        int choice = scanner.nextInt();
+
+        PalindromeStrategy strategy;
+
+        // Inject strategy at runtime
+        if (choice == 1) {
+            strategy = new StackStrategy();
+        } else {
+            strategy = new DequeStrategy();
+        }
+
+        boolean result = strategy.check(input);
 
         System.out.println("Input : " + input);
         System.out.println("Is Palindrome? : " + result);
+
+        scanner.close();
     }
 }
 
-/**
- * Service class that contains palindrome logic.
- */
-class PalindromeService {
+interface PalindromeStrategy {
+    boolean check(String input);
+}
+class StackStrategy implements PalindromeStrategy {
 
-    /**
-     * Checks whether the input string is a palindrome.
-     *
-     * @param input input string
-     * @return true if palindrome, false otherwise
-     */
-    public boolean checkPalindrome(String input) {
+    @Override
+    public boolean check(String input) {
 
-        if (input == null) {
-            return false;
+        // Create a stack to store characters
+        Stack<Character> stack = new Stack<>();
+
+        // Push each character of the input string onto stack
+        for (char c : input.toCharArray()) {
+            stack.push(c);
         }
 
-        int start = 0;
-        int end = input.length() - 1;
-
-        // Compare characters moving inward
-        while (start < end) {
-            if (input.charAt(start) != input.charAt(end)) {
+        // Compare characters by popping from stack
+        for (char c : input.toCharArray()) {
+            if (c != stack.pop()) {
                 return false;
             }
-            start++;
-            end--;
+        }
+
+        return true;
+    }
+}
+
+class DequeStrategy implements PalindromeStrategy {
+
+    @Override
+    public boolean check(String input) {
+
+        Deque<Character> deque = new ArrayDeque<>();
+
+        // Add characters to deque
+        for (char c : input.toCharArray()) {
+            deque.addLast(c);
+        }
+
+        // Compare from both ends
+        while (deque.size() > 1) {
+            if (!deque.removeFirst().equals(deque.removeLast())) {
+                return false;
+            }
         }
 
         return true;
