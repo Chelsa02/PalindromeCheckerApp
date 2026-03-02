@@ -1,40 +1,59 @@
 import java.util.*;
 
 /**
- * UC12
+ * ============================================================
+ * MAIN CLASS - UseCase13PalindromeCheckerApp
+ * ============================================================
+ *
+ * Use Case 13: Performance Comparison
+ *
+ * Description:
+ * This class measures and compares the execution
+ * performance of palindrome validation algorithms.
+ *
+ * At this stage, the application:
+ * - Uses multiple palindrome implementations
+ * - Captures execution start and end time
+ * - Calculates total execution duration
+ * - Displays benchmarking results
+ *
+ * This use case focuses purely on performance
+ * measurement and algorithm comparison.
+ *
  * Author: Developer
- * Version: 12.0
+ * Version: 13.0
  */
 
-public class UseCase12PalindromeCheckerApp {
+public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter a string: ");
+        System.out.print("Input : ");
         String input = scanner.nextLine();
 
-        System.out.println("Choose Strategy:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
-        System.out.print("Enter choice (1 or 2): ");
+        // List of strategies to compare
+        List<PalindromeStrategy> strategies = new ArrayList<>();
+        strategies.add(new StackStrategy());
+        strategies.add(new DequeStrategy());
+        strategies.add(new ReverseStringStrategy());
 
-        int choice = scanner.nextInt();
+        for (PalindromeStrategy strategy : strategies) {
 
-        PalindromeStrategy strategy;
+            long startTime = System.nanoTime();
 
-        // Inject strategy at runtime
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
+            boolean result = strategy.check(input);
+
+            long endTime = System.nanoTime();
+
+            long executionTime = endTime - startTime;
+
+            System.out.println("-----------------------------------");
+            System.out.println("Strategy : " + strategy.getClass().getSimpleName());
+            System.out.println("Is Palindrome : " + result);
+            System.out.println("Execution Time : " + executionTime + " ns");
         }
-
-        boolean result = strategy.check(input);
-
-        System.out.println("Input : " + input);
-        System.out.println("Is Palindrome? : " + result);
 
         scanner.close();
     }
@@ -43,20 +62,18 @@ public class UseCase12PalindromeCheckerApp {
 interface PalindromeStrategy {
     boolean check(String input);
 }
+
 class StackStrategy implements PalindromeStrategy {
 
     @Override
     public boolean check(String input) {
 
-        // Create a stack to store characters
         Stack<Character> stack = new Stack<>();
 
-        // Push each character of the input string onto stack
         for (char c : input.toCharArray()) {
             stack.push(c);
         }
 
-        // Compare characters by popping from stack
         for (char c : input.toCharArray()) {
             if (c != stack.pop()) {
                 return false;
@@ -74,12 +91,10 @@ class DequeStrategy implements PalindromeStrategy {
 
         Deque<Character> deque = new ArrayDeque<>();
 
-        // Add characters to deque
         for (char c : input.toCharArray()) {
             deque.addLast(c);
         }
 
-        // Compare from both ends
         while (deque.size() > 1) {
             if (!deque.removeFirst().equals(deque.removeLast())) {
                 return false;
@@ -87,5 +102,16 @@ class DequeStrategy implements PalindromeStrategy {
         }
 
         return true;
+    }
+}
+
+
+class ReverseStringStrategy implements PalindromeStrategy {
+
+    @Override
+    public boolean check(String input) {
+
+        String reversed = new StringBuilder(input).reverse().toString();
+        return input.equals(reversed);
     }
 }
